@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Pepper's Ghost Weather Display</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <style>
+        body {
+            perspective: 1000px;
+            background: black;
+            color: white;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+            margin: 0;
+        }
+
+        #container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Base styles for text */
+        .overlay-text {
+            position: absolute;
+            font-size: 24px;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px 20px;
+            border-radius: 8px;
+            pointer-events: none;
+            width: 200px;
+            transform-style: preserve-3d;
+        }
+
+        /* Top Pane (default) */
+        #weather-text {
+            top: 25%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        /* Bottom Pane - Mirrored */
+        #weather-text-bottom {
+            bottom: 25%;
+            left: 50%;
+            transform: translateX(-50%) rotateX(180deg);
+        }
+
+        /* Left Pane - Rotated 45 degrees */
+        #weather-text-left {
+            top: 50%;
+            left: 10%;
+            transform: translate(-50%, -50%) rotateY(45deg);
+        }
+
+        /* Right Pane - Rotated -45 degrees */
+        #weather-text-right {
+            top: 50%;
+            right: 10%;
+            transform: translate(50%, -50%) rotateY(-45deg);
+        }
+    </style>
+</head>
+<body>
+    <!-- Three.js container -->
+    <div id="container"></div>
+
+    <!-- Overlay text elements -->
+    <div id="weather-text" class="overlay-text">Loading weather...</div>
+    <div id="weather-text-bottom" class="overlay-text">Loading weather...</div>
+    <div id="weather-text-left" class="overlay-text">Loading weather...</div>
+    <div id="weather-text-right" class="overlay-text">Loading weather...</div>
+
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "./build/three.module.js",
+                "three/addons/": "./jsm/"
+            }
+        }
+    </script>
+
+    <script type="module">
+        import * as THREE from 'three';
+        import { PeppersGhostEffect } from 'three/addons/effects/PeppersGhostEffect.js';
+        import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+
+        let container = document.getElementById('container');
+        let camera, scene, renderer, effect;
+        let group;
+
+        init();
+        fetchWeather();
+
+        function init() {
+            // Set up the camera
+            camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 100000);
+
+            // Create the scene
+            scene = new THREE.Scene();
+
+            // Create a group for organizing objects in the scene
+            group = new THREE.Group();
+            scene.add(group);
+
+            // Add ambient light
+            const ambientLight = new THREE.AmbientLight(0x404040, 4);
+            scene.add(ambientLight);
+
+            // Add a directional light
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 6);
+            directionalLight.position.set(10, 10, 10);
+            directionalLight.castShadow = true;
+            scene.add(directionalLight);
+
+            // Load the GLB model
+            const loader = new GLTFLoader();
+            loader.load('lion.glb', function (gltf) {
+                const model = gltf.scene;
+                model.scale.set(2, 2, 2);
+                model.position.set(0, -2, 0);
+                group.add(model);
+            });
+
+            // Set up the renderer
+            renderer = new THREE.WebGLRenderer();
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setAnimationLoop(animate);
+            container.appendChild(renderer.domElement);
+
+            effect = new PeppersGhostEffect(renderer);
+            effect.setSize(window.innerWidth, window.innerHeight);
+            effect.cameraDistance = 5;
+
+            // Handle window resizing
+            window.addEventListener('resize', onWindowResize);
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            effect.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function animate() {
+            group.rotation.y += 0.01; // Rotate the group for animation
+            effect.render(scene, camera);
+        }
+
+        async function fetchWeather() {
+            try {
+                const response = await fetch('https://api.open-meteo.com/v1/forecast?latitude=37.7749&longitude=-122.4194&current_weather=true');
+                const data = await response.json();
+                const temp = data.current_weather.temperature;
+                const condition = data.current_weather.weathercode; // Weather code for conditions
+
+                let conditionText = getWeatherCondition(condition);
+                let weatherText = `San Francisco: ${temp}°C - ${conditionText}`;
+
+                // Update all text overlays
+                document.getElementById('weather-text').innerText = weatherText;
+                document.getElementById('weather-text-bottom').innerText = weatherText;
+                document.getElementById('weather-text-left').innerText = weatherText;
+                document.getElementById('weather-text-right').innerText = weatherText;
+            } catch (error) {
+                console.error("Failed to fetch weather:", error);
+            }
+        }
+
+        function getWeatherCondition(code) {
+            // Weather codes based on Open-Meteo documentation
+            const weatherConditions = {
+                0: "Clear sky",
+                1: "Mainly clear",
+                2: "Partly cloudy",
+                3: "Overcast",
+                45: "Fog",
+                48: "Depositing rime fog",
+                51: "Drizzle (Light)",
+                53: "Drizzle (Moderate)",
+                55: "Drizzle (Dense)",
+                61: "Rain (Slight)",
+                63: "Rain (Moderate)",
+                65: "Rain (Heavy)",
+                80: "Rain showers (Slight)",
+                81: "Rain showers (Moderate)",
+                82: "Rain showers (Violent)",
+                95: "Thunderstorm (Slight/Moderate)",
+                96: "Thunderstorm with hail (Slight)",
+                99: "Thunderstorm with hail (Heavy)"
+            };
+            return weatherConditions[code] || "Unknown";
+        }
+    </script>
+</body>
+</html>
