@@ -5,6 +5,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
     <style>
+        html {
+            height: 100%;
+        }
+
         body {
             perspective: 1000px;
             background: black;
@@ -12,6 +16,7 @@
             font-family: Arial, sans-serif;
             overflow: hidden;
             margin: 0;
+            height: 100%;
         }
 
         #container {
@@ -37,6 +42,7 @@
 
         /* Top Pane (default) */
         #weather-text {
+            display: none;
             top: 25%;
             left: 50%;
             transform: translateX(-50%);
@@ -51,6 +57,7 @@
 
         /* Left Pane - Rotated 45 degrees */
         #weather-text-left {
+            display: none;
             top: 50%;
             left: 10%;
             transform: translate(-50%, -50%) rotateY(45deg);
@@ -58,6 +65,7 @@
 
         /* Right Pane - Rotated -45 degrees */
         #weather-text-right {
+            display: none;
             top: 50%;
             right: 10%;
             transform: translate(50%, -50%) rotateY(-45deg);
