@@ -202,6 +202,7 @@
             effect.cameraDistance = 5;
 
             // Handle window resizing
+            onWindowResize();
             window.addEventListener('resize', onWindowResize);
 
             // Add event listeners for transformation buttons
@@ -212,9 +213,20 @@
         }
 
         function onWindowResize() {
-            camera.aspect = window.innerWidth / window.innerHeight;
+            let { innerWidth, innerHeight } = window;
+            if (innerWidth < innerHeight) {
+                container.style.top = `${Math.floor((innerHeight - innerWidth) / 2)}px`;
+                container.style.height = `${innerWidth}px`;
+                innerHeight = innerWidth;
+            } else {
+                container.style.top = '0px';
+                container.style.height = '100%';
+            }
+
+            camera.aspect = innerWidth / innerHeight;
             camera.updateProjectionMatrix();
-            effect.setSize(window.innerWidth, window.innerHeight);
+            effect.setSize(innerWidth, innerHeight);
+            renderer.setSize(innerWidth, innerHeight);
         }
 
         function animate() {
