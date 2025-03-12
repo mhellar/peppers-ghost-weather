@@ -30,9 +30,8 @@
         /* Base styles for text */
         .overlay-text {
             position: absolute;
-            font-size: 24px;
+            font-size: 16px;
             text-align: center;
-            background: rgba(0, 0, 0, 0.5);
             padding: 10px 20px;
             border-radius: 8px;
             pointer-events: none;
@@ -40,35 +39,9 @@
             transform-style: preserve-3d;
         }
 
-        /* Top Pane (default) */
         #weather-text {
-            display: none;
-            top: 25%;
             left: 50%;
-            transform: translateX(-50%);
-        }
-
-        /* Bottom Pane - Mirrored */
-        #weather-text-bottom {
-            bottom: 25%;
-            left: 50%;
-            transform: translateX(-50%) rotateX(180deg);
-        }
-
-        /* Left Pane - Rotated 45 degrees */
-        #weather-text-left {
-            display: none;
-            top: 50%;
-            left: 10%;
-            transform: translate(-50%, -50%) rotateY(45deg);
-        }
-
-        /* Right Pane - Rotated -45 degrees */
-        #weather-text-right {
-            display: none;
-            top: 50%;
-            right: 10%;
-            transform: translate(50%, -50%) rotateY(-45deg);
+            transform: translateX(-50%) rotateY(180deg);
         }
 
         /* Button styles */
@@ -97,9 +70,6 @@
 
     <!-- Overlay text elements -->
     <div id="weather-text" class="overlay-text">Loading weather...</div>
-    <div id="weather-text-bottom" class="overlay-text">Loading weather...</div>
-    <div id="weather-text-left" class="overlay-text">Loading weather...</div>
-    <div id="weather-text-right" class="overlay-text">Loading weather...</div>
 
     <!-- Transformation buttons -->
     <button id="transformButton1" class="transform-button" style="left: 20%;">Transform 1</button>
@@ -153,10 +123,10 @@
 
             // Load the GLB model
             const loader = new GLTFLoader();
-            loader.load('lion.glb', function (gltf) {
+            loader.load('rain.glb', function (gltf) {
                 model = gltf.scene; // Store the model in the variable
-                model.scale.set(2, 2, 2);
-                model.position.set(0, -2, 0);
+                model.scale.set(.1, .1, .1);
+                model.position.set(0, 0, 0);
                 group.add(model);
             });
 
@@ -222,11 +192,13 @@
                 container.style.top = '0px';
                 container.style.height = '100%';
             }
-
             camera.aspect = innerWidth / innerHeight;
             camera.updateProjectionMatrix();
             effect.setSize(innerWidth, innerHeight);
             renderer.setSize(innerWidth, innerHeight);
+
+            const top = window.innerHeight / 2 + innerHeight / 6;
+            document.getElementById('weather-text').style.bottom = `${top}px`;
         }
 
         function animate() {
@@ -279,11 +251,7 @@
                 let conditionText = getWeatherCondition(condition);
                 let weatherText = `San Francisco: ${temp}°C - ${conditionText}`;
 
-                // Update all text overlays
                 document.getElementById('weather-text').innerText = weatherText;
-                document.getElementById('weather-text-bottom').innerText = weatherText;
-                document.getElementById('weather-text-left').innerText = weatherText;
-                document.getElementById('weather-text-right').innerText = weatherText;
             } catch (error) {
                 console.error("Failed to fetch weather:", error);
             }
