@@ -1,4 +1,4 @@
-Pepper's Ghost Weather Display (CSS Rendering is broken!)
+**Pepper's Ghost Weather Display (CSS Rendering is broken!)**
 
 This project creates a Pepper's Ghost holographic display for mobile devices, dynamically rendering real-time weather information from the Open-Meteo API. The text is duplicated and rotated to display correctly on a holographic pyramid placed over a smartphone screen.
 
@@ -8,7 +8,6 @@ Real-time Weather Data: Fetches current temperature and conditions from Open-Met
 
 Four-Pane Display: Correctly positioned text for Pepper's Ghost effect on a phone pyramid.
 
-Mobile Optimized: Designed to work properly on smartphone screens.
 
 Setup
 
