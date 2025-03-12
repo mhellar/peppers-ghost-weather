@@ -62,6 +62,25 @@
             right: 10%;
             transform: translate(50%, -50%) rotateY(-45deg);
         }
+
+        /* Button styles */
+        .transform-button {
+            position: absolute;
+            bottom: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            z-index: 1000; /* Ensure buttons are on top */
+        }
+
+        .transform-button:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
     </style>
 </head>
 <body>
@@ -73,6 +92,12 @@
     <div id="weather-text-bottom" class="overlay-text">Loading weather...</div>
     <div id="weather-text-left" class="overlay-text">Loading weather...</div>
     <div id="weather-text-right" class="overlay-text">Loading weather...</div>
+
+    <!-- Transformation buttons -->
+    <button id="transformButton1" class="transform-button" style="left: 20%;">Transform 1</button>
+    <button id="transformButton2" class="transform-button" style="left: 35%;">Transform 2</button>
+    <button id="transformButton3" class="transform-button" style="left: 50%;">Transform 3</button>
+    <button id="transformButton4" class="transform-button" style="left: 65%;">Transform 4</button>
 
     <script type="importmap">
         {
@@ -91,6 +116,8 @@
         let container = document.getElementById('container');
         let camera, scene, renderer, effect;
         let group;
+        let model; // Variable to store the loaded model
+        let particleSystem;
 
         init();
         fetchWeather();
@@ -119,11 +146,42 @@
             // Load the GLB model
             const loader = new GLTFLoader();
             loader.load('lion.glb', function (gltf) {
-                const model = gltf.scene;
+                model = gltf.scene; // Store the model in the variable
                 model.scale.set(2, 2, 2);
                 model.position.set(0, -2, 0);
                 group.add(model);
             });
+
+            // Particle system setup
+            const particleCount = 200; // Reduced number of particles
+            const particles = new THREE.BufferGeometry();
+            const particlePositions = new Float32Array(particleCount * 3);
+            const particleColors = new Float32Array(particleCount * 3);
+
+            for (let i = 0; i < particleCount; i++) {
+                particlePositions[i * 3] = (Math.random() - 0.5) * 50; // Smaller area
+                particlePositions[i * 3 + 1] = (Math.random() - 0.5) * 50;
+                particlePositions[i * 3 + 2] = (Math.random() - 0.5) * 50;
+
+                particleColors[i * 3] = Math.random();
+                particleColors[i * 3 + 1] = Math.random();
+                particleColors[i * 3 + 2] = Math.random();
+            }
+
+            particles.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
+            particles.setAttribute('color', new THREE.BufferAttribute(particleColors, 3));
+
+            const particleMaterial = new THREE.PointsMaterial({
+                size: 1, // Smaller particles
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.5, // 50% transparency
+                blending: THREE.AdditiveBlending,
+                sizeAttenuation: true
+            });
+
+            particleSystem = new THREE.Points(particles, particleMaterial);
+            group.add(particleSystem);
 
             // Set up the renderer
             renderer = new THREE.WebGLRenderer();
@@ -137,6 +195,12 @@
 
             // Handle window resizing
             window.addEventListener('resize', onWindowResize);
+
+            // Add event listeners for transformation buttons
+            document.getElementById('transformButton1').addEventListener('click', () => transformModel(1));
+            document.getElementById('transformButton2').addEventListener('click', () => transformModel(2));
+            document.getElementById('transformButton3').addEventListener('click', () => transformModel(3));
+            document.getElementById('transformButton4').addEventListener('click', () => transformModel(4));
         }
 
         function onWindowResize() {
@@ -147,7 +211,42 @@
 
         function animate() {
             group.rotation.y += 0.01; // Rotate the group for animation
+
+            // Update particle positions (subtle movement)
+            const positions = particleSystem.geometry.attributes.position.array;
+            for (let i = 0; i < positions.length / 3; i++) {
+                positions[i * 3] += (Math.random() - 0.5) * 0.05; // Slower movement
+                positions[i * 3 + 1] += (Math.random() - 0.5) * 0.05;
+                positions[i * 3 + 2] += (Math.random() - 0.5) * 0.05;
+            }
+            particleSystem.geometry.attributes.position.needsUpdate = true;
+
             effect.render(scene, camera);
+        }
+
+        function transformModel(transformationType) {
+            if (!model) return;
+
+            switch (transformationType) {
+                case 1:
+                    model.scale.set(3, 3, 3);
+                    break;
+                case 2:
+                    model.rotation.y += Math.PI / 2;
+                    break;
+                case 3:
+                    model.position.set(5, 0, 0);
+                    break;
+                case 4:
+                    model.traverse((child) => {
+                        if (child.isMesh) {
+                            child.material.color.set(Math.random() * 0xffffff); // Random color
+                        }
+                    });
+                    break;
+                default:
+                    console.log("Unknown transformation type");
+            }
         }
 
         async function fetchWeather() {
