@@ -150,10 +150,10 @@
             particles.setAttribute('color', new THREE.BufferAttribute(particleColors, 3));
 
             const particleMaterial = new THREE.PointsMaterial({
-                size: 1, // Smaller particles
+                size: .5, // Smaller particles
                 vertexColors: true,
                 transparent: true,
-                opacity: 0.5, // 50% transparency
+                opacity: 0.3, // 50% transparency
                 blending: THREE.AdditiveBlending,
                 sizeAttenuation: true
             });
