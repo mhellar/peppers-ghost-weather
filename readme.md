@@ -42,3 +42,4 @@ Credits
 Uses the Open-Meteo API for weather data.
 
 Inspired by Pepper's Ghost effect for holographic displays.
+

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Pepper's Ghost: The Magic Behind Holograms</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/reveal.js/dist/reveal.css">
+    <link rel="stylesheet" href="https://unpkg.com/reveal.js/dist/theme/black.css">
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@latest/build/three.module.js",
+          "three/addons/": "https://unpkg.com/three@latest/examples/jsm/"
+        }
+      }
+    </script>
+</head>
+<body>
+
+<div class="reveal">
+    <div class="slides">
+      
+        <!-- Title Slide -->
+        <section>
+            <h1>Pepper's Ghost Effect</h1>
+            <h3>The Magic Behind Holograms</h3>
+            <p>🚀 An Interactive Deep Dive</p>
+        </section>
+
+        <!-- History Slide -->
+        <section>
+            <h2>📜 The History of Pepper's Ghost</h2>
+            <p>Invented by John Henry Pepper in 1862</p>
+            <p>First used in theaters for ghostly illusions 👻</p>
+            <p>Now used in concerts (Tupac, Hatsune Miku) 🎤</p>
+        </section>
+
+        <!-- How It Works Slide -->
+        <section>
+            <h2>🔍 How Does It Work?</h2>
+            <ul>
+                <li>Uses a transparent screen at an angle 📏</li>
+                <li>Reflects an image that appears as a hologram ✨</li>
+                <li>Modern versions use projectors and LCD screens</li>
+            </ul>
+        </section>
+
+        <!-- Live Three.js Demo -->
+        <section>
+            <h2>🛠️ Live Demo: Pepper's Ghost Effect</h2>
+            <p>Try rotating & speaking commands! 🎙️</p>
+            <!-- <iframe src="your-threejs-demo-url.html" width="800" height="600"></iframe> -->
+        </section>
+
+        <!-- Physics Slide (If Interesting) -->
+        <section>
+            <h2>⚛️ The Science Behind It</h2>
+            <p>Light reflection & refraction at 45° angles</p>
+            <p>Similar to **Heads-Up Displays (HUDs)** in cars</p>
+            <p>Uses **partial transparency** for realism</p>
+        </section>
+
+        <!-- Code Explanation -->
+        <section>
+            <h2>🖥️ How the Code Works</h2>
+            <pre><code data-trim>
+import { PeppersGhostEffect } from 'three/addons/effects/PeppersGhostEffect.js';
+
+const effect = new PeppersGhostEffect(renderer);
+effect.setSize(window.innerWidth, window.innerHeight);
+effect.cameraDistance = 5;
+            </code></pre>
+            <p>🔹 Uses a **custom shader** to simulate the reflection</p>
+        </section>
+
+        <!-- Fun What Ifs -->
+        <section>
+            <h2>🤯 Fun "What Ifs"!</h2>
+            <ul>
+                <li>What if we could make **real-life Star Wars holograms**?</li>
+                <li>Could we create **floating VR displays** with this?</li>
+                <li>What if we **scaled this to an entire building**?</li>
+            </ul>
+        </section>
+
+        <!-- Conclusion Slide -->
+        <section>
+            <h2>🎉 Thank You!</h2>
+        </section>
+
+    </div>
+</div>
+
+<script src="https://unpkg.com/reveal.js/dist/reveal.js"></script>
+<script>
+    Reveal.initialize({
+        hash: true,
+        slideNumber: true,
+        transition: 'slide'
+    });
+</script>
+
+</body>
+</html>
