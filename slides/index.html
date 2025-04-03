@@ -6,14 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://unpkg.com/reveal.js/dist/reveal.css">
     <link rel="stylesheet" href="https://unpkg.com/reveal.js/dist/theme/black.css">
-    <script type="importmap">
-      {
-        "imports": {
-          "three": "https://unpkg.com/three@latest/build/three.module.js",
-          "three/addons/": "https://unpkg.com/three@latest/examples/jsm/"
-        }
-      }
-    </script>
+    <script src="https://unpkg.com/reveal.js/plugin/notes/notes.js"></script>
+<script src="https://unpkg.com/reveal.js/dist/reveal.js"></script>
+    
 </head>
 <body>
 
@@ -22,33 +17,73 @@
       
         <!-- Title Slide -->
         <section>
-            <h1>Pepper's Ghost Effect</h1>
-            <h3>The Magic Behind Holograms</h3>
-            <p>🚀 An Interactive Deep Dive</p>
+            <h2>Holograms in Your Pocket</h2>
+            <p>🚀  Bringing the Magic of Pepper’s Ghost to Your Phone!</p>
+            
+
+        </section>
+        <section>
+            <h2>👻 What is Pepper’s Ghost?</h2>
+            <p>✨ A 19th-century illusion that makes objects appear as **ghostly projections**.</p>
+            <ul>
+                <li>Invented by **John Henry Pepper** in 1862.</li>
+                <li>Uses a **transparent surface** at an angle to reflect hidden objects.</li>
+                <li>Originally used in **theater**—now seen in **holograms & live events**!</li>
+            </ul>
+            <p>🔮 The tech behind **Tupac at Coachella & Hatsune Miku concerts**!</p>
         </section>
 
         <!-- History Slide -->
         <section>
             <h2>📜 The History of Pepper's Ghost</h2>
+            <aside class="notes">
             <p>Invented by John Henry Pepper in 1862</p>
             <p>First used in theaters for ghostly illusions 👻</p>
             <p>Now used in concerts (Tupac, Hatsune Miku) 🎤</p>
+        </aside>
         </section>
 
+
+                <!-- History Slide -->
+                <section>
+<img src="Peppers_Ghost.jpg" height="600">
+<aside class="notes">
+    "John Henry Pepper, a British scientist and lecturer, is best known for his demonstration of the Pepper's Ghost effect in 1862 at the Royal Polytechnic Institution in London. During a lecture, he used a transparent surface at a 45-degree angle to reflect an image from a hidden light source, creating the illusion of a ghostly figure that appeared to float in midair. This groundbreaking technique amazed audiences and became a defining moment in the history of theatrical illusions."
+</aside>
+                </section>
+
+                <section data-background-image="tupac.png" data-background-size="60%">
+
+                    <aside class="notes">
+                        In 2012, Tupac Shakur’s hologram stunned the world at Coachella. This performance, over 15 years after his death, used the Pepper's Ghost technique to project a holographic Tupac rapping alongside live performers like Dr. Dre and Snoop Dogg. It was a game-changer, blending cutting-edge technology with the emotional depth of live performance.
+                        This was the first widely publicized use of holography in music, opening up a new realm of possibilities for posthumous performances. The success of Tupac's hologram sparked conversations about the potential of holography in the entertainment industry, influencing the way artists could be remembered and experienced by fans.                    </aside>
+                                    </section>
+
+                                    <section data-background-image="hm.png" data-background-size="80%">
+
+                                        <aside class="notes">
+                                            Hatsune Miku: Speaking Note
+
+                                            Following Tupac’s hologram, we saw a significant leap with the rise of Hatsune Miku, a fully virtual pop star from Japan. Unlike Tupac, Miku’s performances aren’t based on a real person, but instead, she’s an entirely digital creation. Her holographic concerts are held worldwide, where thousands of fans gather to see her sing and dance, projected live in 3D.
+                                            
+                                            Miku’s concerts are a prime example of how holography can create immersive, interactive experiences that blur the lines between digital and physical realms. What’s more, Hatsune Miku represents the future of virtual performers—combining technology and entertainment in new ways that push the boundaries of what’s possible in live performance today.                                        </aside>
+                                                        </section>
+
+                
         <!-- How It Works Slide -->
         <section>
             <h2>🔍 How Does It Work?</h2>
             <ul>
                 <li>Uses a transparent screen at an angle 📏</li>
                 <li>Reflects an image that appears as a hologram ✨</li>
-                <li>Modern versions use projectors and LCD screens</li>
+                <li>Modern versions use projectors and LCD screens in our case a Phone!</li>
             </ul>
         </section>
 
         <!-- Live Three.js Demo -->
         <section>
             <h2>🛠️ Live Demo: Pepper's Ghost Effect</h2>
-            <p>Try rotating & speaking commands! 🎙️</p>
+            <!-- <p>Try rotating & speaking commands! 🎙️</p> -->
             <!-- <iframe src="your-threejs-demo-url.html" width="800" height="600"></iframe> -->
         </section>
 
@@ -59,28 +94,56 @@
             <p>Similar to **Heads-Up Displays (HUDs)** in cars</p>
             <p>Uses **partial transparency** for realism</p>
         </section>
+        
+<!-- Tech Stack Slide -->
+<section>
+    <h2>🛠️ Tech Stack Behind the Magic</h2>
+    <ul>
+        <li>📡 <strong>Open-Meteo</strong> – Real-time weather data API</li>
+        <li>🎨 <strong>Three.js</strong> – 3D graphics for web & mobile</li>
+        <li>📦 <strong>glTF</strong> – Efficient 3D model format</li>
+        <li>📱 <strong>WebXR</strong> – Immersive web experiences</li>
+        <li>💡 <strong>HTML, CSS, JavaScript</strong> – The foundation</li>
+    </ul>
+</section>
 
-        <!-- Code Explanation -->
-        <section>
-            <h2>🖥️ How the Code Works</h2>
-            <pre><code data-trim>
+<section>
+    <h2>🖥️ How the Code Works</h2>
+    <pre><code data-trim>
 import { PeppersGhostEffect } from 'three/addons/effects/PeppersGhostEffect.js';
 
 const effect = new PeppersGhostEffect(renderer);
 effect.setSize(window.innerWidth, window.innerHeight);
 effect.cameraDistance = 5;
-            </code></pre>
-            <p>🔹 Uses a **custom shader** to simulate the reflection</p>
-        </section>
+    </code></pre>
+    <p>✨ Uses a custom shader for a floating holographic effect.</p>
+    <aside class="notes">
+    "This part of the code brings the Pepper's Ghost illusion to life using a custom shader from Three.js, a popular JavaScript library for creating 3D graphics in the browser. The shader simulates the floating holographic effect, while adjusting the size and camera distance ensures a seamless, realistic sense of depth."
+</aside>   
+</section>
+
+<section>
+    <h2>🌤️ Using Weather Data to Drive Holographic Effects</h2>
+    <p>🔧 Fetching real-time weather information from the Open-Meteo API to adjust hologram visuals:</p>
+    <ul>
+        <li>🌡️ Fetching current weather data (e.g., temperature, cloud cover, etc.)</li>
+        <li>💨 Changing hologram effects based on weather conditions (e.g., sun, rain, or storms)</li>
+        <li>🌈 Updating colors, lighting, and animations to reflect the weather</li>
+    </ul>
+    <p>🎮 This makes the holographic experience interactive and responsive to the environment around you!</p>
+</section>
+
+        
 
         <!-- Fun What Ifs -->
         <section>
-            <h2>🤯 Fun "What Ifs"!</h2>
+            <h2>🤯 Mind-Blowing "What Ifs"!</h2>
             <ul>
-                <li>What if we could make **real-life Star Wars holograms**?</li>
-                <li>Could we create **floating VR displays** with this?</li>
-                <li>What if we **scaled this to an entire building**?</li>
+                <li>What if we could create **real-life Star Wars holograms** that interact with us in real time? 👾</li>
+                <li>What if we could make **floating VR displays** that blend the virtual and real world seamlessly? 🌐</li>
+                <li>What if we could **holographically project historical figures** to have live conversations with them? 🗣️</li>
             </ul>
+            <p>🚀 These ideas could push holography beyond what we think is possible today!</p>
         </section>
 
         <!-- Conclusion Slide -->
@@ -91,14 +154,16 @@ effect.cameraDistance = 5;
     </div>
 </div>
 
-<script src="https://unpkg.com/reveal.js/dist/reveal.js"></script>
 <script>
     Reveal.initialize({
         hash: true,
         slideNumber: true,
+        plugins: [ RevealNotes],
         transition: 'slide'
     });
 </script>
+
+
 
 </body>
 </html>
