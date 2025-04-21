@@ -72,10 +72,7 @@
     <div id="weather-text" class="overlay-text">Loading weather...</div>
 
     <!-- Transformation buttons -->
-    <button id="transformButton1" class="transform-button" style="left: 20%;">Transform 1</button>
-    <button id="transformButton2" class="transform-button" style="left: 35%;">Transform 2</button>
-    <button id="transformButton3" class="transform-button" style="left: 50%;">Transform 3</button>
-    <button id="transformButton4" class="transform-button" style="left: 65%;">Transform 4</button>
+    <button id="transformButton1" class="transform-button" style="left: 50%; transform: translateX(-50%);">Change Location</button>
 
     <script type="importmap">
         {
@@ -91,6 +88,7 @@
         import { PeppersGhostEffect } from 'three/addons/effects/PeppersGhostEffect.js';
         import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
+        let location = '94039';
         let container = document.getElementById('container');
         let camera, scene, renderer, effect;
         let group;
@@ -166,10 +164,7 @@
             window.addEventListener('resize', onWindowResize);
 
             // Add event listeners for transformation buttons
-            document.getElementById('transformButton1').addEventListener('click', () => transformModel(1));
-            document.getElementById('transformButton2').addEventListener('click', () => transformModel(2));
-            document.getElementById('transformButton3').addEventListener('click', () => transformModel(3));
-            document.getElementById('transformButton4').addEventListener('click', () => transformModel(4));
+            document.getElementById('transformButton1').addEventListener('click', () => changeLocation());
 
             // fetch weather data
             fetchWeather();
@@ -209,35 +204,32 @@
             effect.render(scene, camera);
         }
 
-        function transformModel(transformationType) {
-            if (!model) return;
-
-            switch (transformationType) {
-                case 1:
-                    model.scale.set(3, 3, 3);
-                    break;
-                case 2:
-                    model.rotation.y += Math.PI / 2;
-                    break;
-                case 3:
-                    model.position.set(5, 0, 0);
-                    break;
-                case 4:
-                    model.traverse((child) => {
-                        if (child.isMesh) {
-                            child.material.color.set(Math.random() * 0xffffff); // Random color
-                        }
-                    });
-                    break;
-                default:
-                    console.log("Unknown transformation type");
+        function changeLocation() {
+            location = prompt("Enter a new location (e.g., city name or postal code):", location);
+            if (location) {
+                fetchWeather();
             }
         }
 
         async function fetchWeather() {
             try {
-                const response = await fetch('https://api.open-meteo.com/v1/forecast?latitude=37.7749&longitude=-122.4194&current_weather=true');
-                const data = await response.json();
+                let data;
+                let response;
+                response = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(location)}&count=1&language=en&format=json`);
+                data = await response.json();
+
+                let latitude;
+                let longitude;
+                let name;
+                if (data.results.length > 0) {
+                    ({name, latitude, longitude} = data.results[0]);
+                } else {
+                    name = "San Francisco";
+                    latitude = 37.7749;
+                    longitude = -122.4194;
+                }
+                response = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true`);
+                data = await response.json();
                 const temp = data.current_weather.temperature;
                 const condition = data.current_weather.weathercode; // Weather code for conditions
 
@@ -258,7 +250,7 @@
                 }
 
                 let conditionText = getWeatherCondition(condition);
-                let weatherText = `San Francisco: ${temp}°C - ${conditionText}`;
+                let weatherText = `${name}: ${temp}°C - ${conditionText}`;
 
                 document.getElementById('weather-text').innerText = weatherText;
             } catch (error) {
