@@ -98,7 +98,6 @@
         let particleSystem;
 
         init();
-        fetchWeather();
 
         function init() {
             // Set up the camera
@@ -120,15 +119,6 @@
             directionalLight.position.set(10, 10, 10);
             directionalLight.castShadow = true;
             scene.add(directionalLight);
-
-            // Load the GLB model
-            const loader = new GLTFLoader();
-            loader.load('rain.glb', function (gltf) {
-                model = gltf.scene; // Store the model in the variable
-                model.scale.set(.1, .1, .1);
-                model.position.set(0, 0, 0);
-                group.add(model);
-            });
 
             // Particle system setup
             const particleCount = 200; // Reduced number of particles
@@ -180,6 +170,9 @@
             document.getElementById('transformButton2').addEventListener('click', () => transformModel(2));
             document.getElementById('transformButton3').addEventListener('click', () => transformModel(3));
             document.getElementById('transformButton4').addEventListener('click', () => transformModel(4));
+
+            // fetch weather data
+            fetchWeather();
         }
 
         function onWindowResize() {
@@ -248,6 +241,22 @@
                 const temp = data.current_weather.temperature;
                 const condition = data.current_weather.weathercode; // Weather code for conditions
 
+                if (group && model) {
+                    group.remove(model); // Remove the old model before adding a new one
+                }
+                if (group) {
+                    const filename = getModelFile(condition);
+                    if (filename){
+                        const loader = new GLTFLoader();
+                        loader.load(filename, function (gltf) {
+                            model = gltf.scene; // Store the model in the variable
+                            model.scale.set(.1, .1, .1);
+                            model.position.set(0, 0, 0);
+                            group.add(model);
+                        });
+                    }
+                }
+
                 let conditionText = getWeatherCondition(condition);
                 let weatherText = `San Francisco: ${temp}°C - ${conditionText}`;
 
@@ -255,6 +264,29 @@
             } catch (error) {
                 console.error("Failed to fetch weather:", error);
             }
+        }
+
+        function getModelFile(code) {
+            if (code == 0) {
+                return "sunny.glb";
+            } else if (code == 1) {
+                return "sunny3.glb";
+            } else if (code == 2) {
+                return "partlycloudy.glb";
+            } else if (code <= 48) {
+                return "cloudy.glb";
+            } else if (code >= 51 && code <= 65) {
+                return "rain.glb";
+            } else if (code >= 66 && code <= 77) {
+                return "snow.glb";
+            } else if (code >= 80 && code <= 82) {
+                return "rain.glb";
+            } else if (code >= 85 && code <= 86) {
+                return "snow.glb";
+            } else if (code <= 99) {
+                return "thunderstorm.glb";
+            }
+            return null;
         }
 
         function getWeatherCondition(code) {
@@ -269,12 +301,22 @@
                 51: "Drizzle (Light)",
                 53: "Drizzle (Moderate)",
                 55: "Drizzle (Dense)",
+                56: "Freezing Drizzle (Light)",
+                57: "Freezing Drizzle (Dense)",
                 61: "Rain (Slight)",
                 63: "Rain (Moderate)",
                 65: "Rain (Heavy)",
+                66: "Freezing Rain (Slight)",
+                67: "Freezing Rain (Heavy)",
+                71: "Snow fall (Slight)",
+                73: "Snow fall (Moderate)",
+                75: "Snow fall (Heavy)",
+                77: "Snow grains",
                 80: "Rain showers (Slight)",
                 81: "Rain showers (Moderate)",
                 82: "Rain showers (Violent)",
+                85: "Snow showers (Slight)",
+                86: "Snow showers (Heavy)",
                 95: "Thunderstorm (Slight/Moderate)",
                 96: "Thunderstorm with hail (Slight)",
                 99: "Thunderstorm with hail (Heavy)"
