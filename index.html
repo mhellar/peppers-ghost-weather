@@ -231,7 +231,9 @@
                 let longitude;
                 let name;
                 if (data.results?.length > 0) {
-                    ({name, latitude, longitude} = data.results[0]);
+                    let admin1;
+                    ({name, admin1, latitude, longitude} = data.results[0]);
+                    name = `${name}, ${admin1}`;
                 } else {
                     alert("Location not found. Defaulting to San Francisco.");
                     name = "San Francisco";
