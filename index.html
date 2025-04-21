@@ -224,7 +224,7 @@
             try {
                 let data;
                 let response;
-                response = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(location)}&count=2&language=en&format=json`);
+                response = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(location)}&count=1&language=en&format=json`);
                 data = await response.json();
 
                 let latitude;
